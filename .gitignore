@@ -1,2 +1,5 @@
 # Ignorar archivos de experimentación de caro
-/zai's_files
+/Caro's_files/*.xlsx
+/Caro's_files/*.pptx
+/Caro's_files/*.svg
+/Caro's_files/Model_Training_and_Export.py
