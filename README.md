@@ -15,10 +15,10 @@ gantt
     🔍 Entendimiento de la tarea:2023-10-20 8:00,4h
     🔍 Construcción de wireframe:2023-10-23,1d
     🛠️ Creación de app multi-página:2023-10-24,1d
+    💔 Intento de implementación de dcc.Store:2023-10-25 6:30, 6h
 ```
 
 ## Requisitos
-
 - Python 3.6 o superior
 - Instalar las dependencias:
     - `Dash`
@@ -27,7 +27,6 @@ gantt
     - `Pgmpy`
 
 ## Uso
-
 1. Completa los parámetros en el formulario de la izquierda.
 2. Observa la probabilidad de éxito académico en el gráfico de la derecha.
 3. Ajusta los parámetros y observa cómo cambia la probabilidad de éxito académico.

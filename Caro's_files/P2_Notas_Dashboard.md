@@ -1,9 +1,12 @@
 ## Oct 25: 🛠️ Día de trabajo
 ### Preguntas y posibles mejoras
-- Revisar la posibilidad de usar `dcc.Store` o `Tabs` en vez de `Pages` para la navegación entre páginas.
-    - ¿Cómo hacer que el `dcc.Store` se actualice con los valores del formulario?
-- En caso de continuar las páginas, utilizar los elementos dbc.Page y dbc.PageLayout para crear las páginas.
 - Hacer un borrador de las visualizaciones que se quieren incluir en el dashboard.
+
+### 💔 Intento de implementación de dcc.Store
+- Intenté utilizar todas las herramientas humanamente posibles para guardar la info del formulario. Fracasé estrepitosamente.
+- Usé persistence, dcc.Store, callbacks, y hasta intenté guardar la info en un archivo JSON sin éxito.
+- Encontré [este artículo](https://stackoverflow.com/questions/63860623/plotly-dash-how-to-store-input-data-in-multipage-app) que explica revisiones que tengo que hacer a la forma del callback para que funcione.
+- 🕯️ En [este repo](https://github.com/AnnMarieW/dash-multi-page-app-demos#7-multi_page_layout_functions) de Anne Marie W hay ejemplos de implementaciones que vale la pena mirar.
 
 ## Oct 24: 🛠️ Implementación de Multi-Page Apps without Pages
 ### 👩🏽‍🎨 Creación de app multi-página
