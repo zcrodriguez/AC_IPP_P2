@@ -7,12 +7,14 @@ gantt
     title Proyecto 2 - Predicción de éxito académico
     dateFormat  YYYY-MM-DD
     section 🐜 Reuniones de trabajo
-    🔍 Entendimiento de la tarea:2023-09-10,1d
-    💼 Repartición de tareas 1:2023-09-12 17:21,30min
+    💼 Repartición de tareas 1:2023-10-24 17:21,30m
     section 💪🏽 Grace - Modelo
-    🔍 Entendimiento de la tarea:2023-09-10,1d
-    section 🐴 Caro - Dashboard
-    🔍 Structure Learning:2023-09-11,4d
+    🔍 Entendimiento de la tarea:2023-10-24 16:30,40m
+    🛠️ Implementación de aprendizaje de estructura: 2023-10-25 12:00, 5d
+    section 🐴 Caro - Dashboard + Visualizaciones
+    🔍 Entendimiento de la tarea:2023-10-20 8:00,4h
+    🔍 Construcción de wireframe:2023-10-23,1d
+    🛠️ Creación de app multi-página:2023-10-24,1d
 ```
 
 ## Requisitos
@@ -31,10 +33,11 @@ gantt
 3. Ajusta los parámetros y observa cómo cambia la probabilidad de éxito académico.
 
 ## Estructura del Proyecto
-- `.gitignore`: Archivo que especifica los archivos que no se deben subir al repositorio.
 - `assets/`: Directorio que contiene los recursos utilizados en la interfaz.
     - `assets/logo-deca.png`: Logo creado para el proyecto.
     - `assets/modelo_entrenado.pkl`: Modelo serializado entrenado con los datos de limpios.
     - `assets/parameter_options.JSON`: Archivo JSON con las opciones de los menús desplegables.
+- `Caro's_files`: Carpeta que contiene archivos de experimentación y apuntes sobre investigación y avance del proyecto.
+- `.gitignore`: Archivo que especifica los archivos que no se deben subir al repositorio.
 - `app.py`: Código principal de la aplicación.
 
