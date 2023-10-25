@@ -8,7 +8,7 @@ import pickle
 from pgmpy.inference import VariableElimination
 
 # Crea una aplicación Dash y aplica un tema
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.MINTY])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.MINTY], suppress_callback_exceptions=True)
 templates = ["minty"]
 load_figure_template(templates)
 
@@ -173,268 +173,339 @@ def validate_credit_inputs(aprobadas, inscritas):
     return is_invalid_aprobadas, feedback_aprobadas, is_invalid_inscritas, feedback_inscritas
 
 
+
+
+
+
+
+
+
+# ======================================================================================================================
+#                                               HOME PAGE CONTENT
+# ======================================================================================================================
+
+def home_content():
+    return html.Div([
+    
+        # Disclaimer text
+        html.Div([
+            dbc.Alert(disclaimer, color="warning", dismissable=True),
+        ], className='row', style={'padding-left': '40px', 'padding-right': '40px', "padding-top": "10px"}),
+
+        # ------------------------------------------------------------------------------------------------------------------
+        #                                           PANEL DE LA IZQUIERDA: FORMULARIO
+        # ------------------------------------------------------------------------------------------------------------------
+        html.Div([
+
+            # Título del formulario
+            html.H3([
+                "Parameters of the model ",
+                dbc.Badge("ℹ️", id="info-badge", color="primary", className="ml-2", style={'margin-left': '10px'}),
+                dbc.Popover(
+                    [
+                        dbc.PopoverHeader("How to Use"),
+                        dbc.PopoverBody(
+                            "Choose the parameters you wish to use for the prediction. "
+                            "Providing more information by selecting additional parameters "
+                            "will enhance the accuracy of the prediction!"
+                        ),
+                    ],
+                    id="info-popover",
+                    target="info-badge",
+                    trigger="hover",
+                ),
+            ]),
+
+            # Fila 1: Botón para limpiar el formulario y barra de progreso
+            dbc.Row([
+
+                # Botón para limpiar el formulario
+                dbc.Col([
+                    dbc.Button("🧹Clear Form", id="clear-button", color="secondary", className="mr-1"),
+                ], width=4, style={'margin-bottom': '10px', 'margin-top': '12px'}),
+
+                # Barra de progreso
+                dbc.Col([
+                    dbc.Label("Form Completion Progress", html_for="progress-bar", size="sm"),
+                    dbc.Progress(id="progress-bar", value=0, striped=True, animated=False, style={'height': '25px'}),
+                ], width=8, style={'margin-bottom': '10px'}),
+                
+            ], justify="center", style={'margin-bottom': '10px'}),
+            html.Div(style={'margin-bottom': '10px'}),
+            
+            # ACORDEÓN DE MENÚS DESPLEGABLES
+            dbc.Accordion([
+                
+                # Menú desplegable 1: Demographic data
+                dbc.AccordionItem([
+
+                            # Fila 1
+                            dbc.Row([
+
+                                # Gender
+                                create_dd('dd_gender', 'Gender', dd_params['gender'], 'Gender', 6),
+
+                                # Age at enrollment
+                                create_dd('dd_age_at_enrollment', 'Age at enrollment', dd_params['age_at_enrollment'], 'Age at enrollment', 6),
+
+                            ],style={'margin-bottom': '5px'}),
+
+                        ], title='Demographic data'
+                    ),
+
+                    # Menú desplegable 2: Socioeconomic data
+                    dbc.AccordionItem(
+                        [
+                            # Fila 1
+                            dbc.Row([
+
+                                # Occupation of financial responsible party (occup_fin_res_party)
+                                create_dd('dd_occup_fin_res_party', 'Occupation of financial responsible party', dd_params['occup_fin_res_party'], 'Occupation of financial responsible party', 12, 55),
+
+                            ],style={'margin-bottom': '5px'}),
+
+                            # Fila 2
+                            dbc.Row([
+                            
+                                # Debtor
+                                create_dd('dd_debtor', 'Debtor', dd_params['debtor'], 'Debtor', 6),
+
+                                # Scholarship holder (scholarship)
+                                create_dd('dd_scholarship', 'Scholarship holder', dd_params['scholarship'], 'Scholarship holder', 6),
+
+                            ],style={'margin-bottom': '5px'}),
+
+                        ],
+                        title='Socioeconomic data'
+                    ),
+
+                    # Menú desplegable 3: Academic data at enrollment
+                        dbc.AccordionItem(
+                            [
+                                # Fila 1
+                                dbc.Row([
+
+                                    # Course
+                                    create_dd('dd_course', 'Course', dd_params['course'], 'Course'),
+
+                                ],style={'margin-bottom': '5px'}),
+
+                                # Fila 2
+                                dbc.Row([
+
+                                    # Admission grade
+                                    create_dd('dd_admission_grade', 'Admission grade', dd_params['admission_grade'], 'Admission grade'),
+
+                                ],style={'margin-bottom': '5px'}),
+                                    
+                            ],
+                            title='Academic data at enrollment'
+                        ),
+
+                        # Menú desplegable 4: Academic data at the end of 1st sem
+                        dbc.AccordionItem(
+                            [
+                                # Fila 1
+                                dbc.Row([
+
+                                    # Approved curricular units
+                                    dbc.Col([
+                                            dbc.Label("Approved credits", html_for="acu_1st_sem", size="sm"),
+                                            dbc.Input(id="acu_1st_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
+                                            dbc.FormFeedback("", type="invalid", id="acu_1st_sem_fb"),
+                                        ], width=5,
+                                    ),
+
+                                    # Enrolled curricular units
+                                    dbc.Col([
+                                            dbc.Label("Enrolled credits", html_for="ecu_1st_sem", size="sm"),
+                                            dbc.Input(id="ecu_1st_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
+                                            dbc.FormFeedback("", type="invalid", id="ecu_1st_sem_fb"),
+                                        ], width=5,
+                                    ),
+
+                                    # Botón info
+                                    create_info_btn('1st_sem_btn'),
+
+                                ], justify="between", style={'margin-bottom': '5px'}),
+
+                                # Fila 2
+                                dbc.Row([
+
+                                    dbc.Alert(id="error-message-uc1", color="danger", is_open=False, style={"margin-top": "10px"}),
+
+                                ],style={'margin-bottom': '5px'}),
+
+                            ],
+                            title='Academic data at the end of 1st sem.'
+                        ),
+
+                        # Menú desplegable 5: Academic data at the end of 2nd sem
+                        dbc.AccordionItem(
+                            [
+                                # Fila 1
+                                dbc.Row([
+
+                                    # Approved curricular units
+                                    dbc.Col([
+                                            dbc.Label("Approved credits", html_for="acu_2nd_sem", size="sm"),
+                                            dbc.Input(id="acu_2nd_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
+                                            dbc.FormFeedback("", type="invalid", id="acu_2nd_sem_fb"),
+                                        ], width=5,
+                                    ),
+                                    
+                                    # Enrolled curricular units
+                                    dbc.Col([
+                                            dbc.Label("Enrolled credits", html_for="ecu_2nd_sem", size="sm"),
+                                            dbc.Input(id="ecu_2nd_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
+                                            dbc.FormFeedback("", type="invalid", id="ecu_2nd_sem_fb"),
+                                        ], width=5,
+                                    ),
+
+                                    # Botón info
+                                    create_info_btn('2nd_sem_btn'),
+
+                                ], justify="between", style={'margin-bottom': '5px'}),
+
+                                # Fila 2
+                                dbc.Row([
+
+                                    dbc.Alert(id="error-message-uc2", color="danger", is_open=False, style={"margin-top": "10px"}),
+
+                                ],style={'margin-bottom': '5px'}),
+
+                            ],  
+                            title='Academic data at the end of 2nd sem.'
+                        ),
+
+                ],
+                id="accordion",
+                always_open=False
+            )
+        ], className='col-md-5', style={'padding-left': '40px', 'padding-right': '40px', 'padding-top': '10px'}),  
+
+        # ------------------------------------------------------------------------------------------------------------------
+        #                                           PANEL DE LA DERECHA: PREDICCIÓN
+        # ------------------------------------------------------------------------------------------------------------------
+        html.Div([
+            html.H3("Probability of academic success"),
+            html.P("The probability of academic success, calculated based on the parameters selected in the form, is:"),
+            html.Div(
+                dcc.Graph(
+                    id='gauge-graph',
+                ), style={'height': '180px', 'overflow': 'auto', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}
+            ),
+            html.Hr(),
+            html.H4("Support Services based on Academic Success Prediction"),
+            html.P("To provide additional support to the students, you can refer them to the following resources:"),
+            dcc.Tabs([
+
+            # Pestaña de apoyo a los estudiantes
+            dcc.Tab(label='Student Support', children=[
+                html.Div([
+                    html.Ul([
+                        html.Li("Course Coordinator: Ensure smooth course operation and represent students' interests."),
+                        html.Li("Mentors: 2nd-year student volunteers assist 1st-year students, aiding integration and offering subject support."),
+                        html.Li("Student Ombudsperson: Mediates and facilitates resolution of administrative, pedagogical, or social conflicts/problems that students may face."),
+                        html.Li("Student Associations: Represent and support students through academic associations, ensuring student well-being and assistance."),
+                        html.Li("Support for Special Needs: Tailored support based on assessment, including attendance and evaluation adaptations."),
+                    ])
+                ], style={"margin-top": "20px"})
+            ]),
+
+            # Pestaña de servicios de financiación
+            dcc.Tab(label='Financial Services', children=[
+                html.Div([
+                    html.Ul([
+                        html.Li("Study Grants: Financial aid for needy students following specified regulations."),
+                        html.Li("Mobility Grants: Available for eligible students, offering 1700 euros annually, through the BeOn Platform."),
+                        html.Li("Discounted Amenities for Students: Affordable food and accommodation packages."),
+                        html.Li("IPP Friend Program: Indirect social support through meal vouchers, food baskets, and housing cost relief."),
+                        html.Li("Awards and Recognition: Scholarships and prizes for academic achievements."),
+                    ])
+                ], style={"margin-top": "20px"})
+            ])
+        ])
+
+        ], className='col-md-7', style={'padding-left': '40px', 'padding-right': '40px', 'padding-top': '10px'})
+
+    ], className='row', style={'display': 'flex'})
+
+
+# ======================================================================================================================
+#                                                     PAGE 1 CONTENT
+# ======================================================================================================================
+
+def page_1_content():
+    return html.Div([
+        html.H3("Page 1"),
+        html.P("This is the content of page 1. You can add any content specific to this page here.")
+    ])
+
+
+# ======================================================================================================================
+#                                                     DISPLAY CONTENT
+# ======================================================================================================================
+def display_content(page):
+    if page == 'page-1':
+        return page_1_content()
+    else:
+        return home_content()  # Por defecto, muestra "Home"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ======================================================================================================================
 #                                               INTERFAZ DE USUARIO
 # ======================================================================================================================
 
 app.layout = html.Div([
-
-    # Barra de navegación
+    dcc.Location(id='url', refresh=False),
     dbc.Navbar(
         dbc.Container([
             html.A(
                 dbc.Row([
-                    dbc.Col(html.Img(src="./assets/logo-deca.png", height="40px"), width="auto"),  # Adjusted this line
-                    dbc.Col(dbc.NavbarBrand("Instituto Politécnico de Portalegre - Ferramenta de predição de sucesso académico")),
+                    dbc.Col(html.Img(src="./assets/logo-deca.png", height="40px"), width="auto"),
+                    dbc.Col(dbc.NavbarBrand("IPP - Ferramenta de predição de sucesso académico")),
                 ], align="center"),
+            ),
+            dbc.Nav(
+                [
+                    dbc.NavItem(dbc.NavLink("🏠 Home", href="/")),
+                    dbc.NavItem(dbc.NavLink("🚧 Page 1", href="/page-1")),
+                ],
+                className="ml-auto",
             ),
         ]),
         color="dark", dark=True,
     ),
+    html.Div(id='page-content'),
+], className='row', style={'display': 'flex'})  
 
-    # Disclaimer text
-    html.Div([
-        dbc.Alert(disclaimer, color="warning", dismissable=True),
-    ], className='row', style={'padding-left': '40px', 'padding-right': '40px', "padding-top": "10px"}),
 
-    # ------------------------------------------------------------------------------------------------------------------
-    #                                           PANEL DE LA IZQUIERDA: FORMULARIO
-    # ------------------------------------------------------------------------------------------------------------------
-    html.Div([
+# ======================================================================================================================
+#                                               CONTENT DISPLAY CALLBACK
+# ======================================================================================================================
+@app.callback(
+    Output('page-content', 'children'),
+    Input('url', 'pathname')
+)
+def display_page(pathname):
+    page = pathname[1:]  # Elimina el "/" inicial en la URL
+    return display_content(page)
 
-        # Título del formulario
-        html.H3([
-            "Parameters of the model ",
-            dbc.Badge("ℹ️", id="info-badge", color="primary", className="ml-2", style={'margin-left': '10px'}),
-            dbc.Popover(
-                [
-                    dbc.PopoverHeader("How to Use"),
-                    dbc.PopoverBody(
-                        "Choose the parameters you wish to use for the prediction. "
-                        "Providing more information by selecting additional parameters "
-                        "will enhance the accuracy of the prediction!"
-                    ),
-                ],
-                id="info-popover",
-                target="info-badge",
-                trigger="hover",
-            ),
-        ]),
 
-        # Fila 1: Botón para limpiar el formulario y barra de progreso
-        dbc.Row([
-
-            # Botón para limpiar el formulario
-            dbc.Col([
-                dbc.Button("🧹Clear Form", id="clear-button", color="secondary", className="mr-1"),
-            ], width=4, style={'margin-bottom': '10px', 'margin-top': '12px'}),
-
-            # Barra de progreso
-            dbc.Col([
-                dbc.Label("Form Completion Progress", html_for="progress-bar", size="sm"),
-                dbc.Progress(id="progress-bar", value=0, striped=True, animated=False, style={'height': '25px'}),
-            ], width=8, style={'margin-bottom': '10px'}),
-            
-        ], justify="center", style={'margin-bottom': '10px'}),
-        html.Div(style={'margin-bottom': '10px'}),
-        
-        # ACORDEÓN DE MENÚS DESPLEGABLES
-        dbc.Accordion([
-            
-            # Menú desplegable 1: Demographic data
-            dbc.AccordionItem([
-
-                        # Fila 1
-                        dbc.Row([
-
-                            # Gender
-                            create_dd('dd_gender', 'Gender', dd_params['gender'], 'Gender', 6),
-
-                            # Age at enrollment
-                            create_dd('dd_age_at_enrollment', 'Age at enrollment', dd_params['age_at_enrollment'], 'Age at enrollment', 6),
-
-                        ],style={'margin-bottom': '5px'}),
-
-                    ], title='Demographic data'
-                ),
-
-                # Menú desplegable 2: Socioeconomic data
-                dbc.AccordionItem(
-                    [
-                        # Fila 1
-                        dbc.Row([
-
-                            # Occupation of financial responsible party (occup_fin_res_party)
-                            create_dd('dd_occup_fin_res_party', 'Occupation of financial responsible party', dd_params['occup_fin_res_party'], 'Occupation of financial responsible party', 12, 55),
-
-                        ],style={'margin-bottom': '5px'}),
-
-                        # Fila 2
-                        dbc.Row([
-                           
-                            # Debtor
-                            create_dd('dd_debtor', 'Debtor', dd_params['debtor'], 'Debtor', 6),
-
-                            # Scholarship holder (scholarship)
-                            create_dd('dd_scholarship', 'Scholarship holder', dd_params['scholarship'], 'Scholarship holder', 6),
-
-                        ],style={'margin-bottom': '5px'}),
-
-                    ],
-                    title='Socioeconomic data'
-                ),
-
-                # Menú desplegable 3: Academic data at enrollment
-                    dbc.AccordionItem(
-                        [
-                            # Fila 1
-                            dbc.Row([
-
-                                # Course
-                                create_dd('dd_course', 'Course', dd_params['course'], 'Course'),
-
-                            ],style={'margin-bottom': '5px'}),
-
-                            # Fila 2
-                            dbc.Row([
-
-                                # Admission grade
-                                create_dd('dd_admission_grade', 'Admission grade', dd_params['admission_grade'], 'Admission grade'),
-
-                            ],style={'margin-bottom': '5px'}),
-                                
-                        ],
-                        title='Academic data at enrollment'
-                    ),
-
-                    # Menú desplegable 4: Academic data at the end of 1st sem
-                    dbc.AccordionItem(
-                        [
-                            # Fila 1
-                            dbc.Row([
-
-                                # Approved curricular units
-                                dbc.Col([
-                                        dbc.Label("Approved credits", html_for="acu_1st_sem", size="sm"),
-                                        dbc.Input(id="acu_1st_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
-                                        dbc.FormFeedback("", type="invalid", id="acu_1st_sem_fb"),
-                                    ], width=5,
-                                ),
-
-                                # Enrolled curricular units
-                                dbc.Col([
-                                        dbc.Label("Enrolled credits", html_for="ecu_1st_sem", size="sm"),
-                                        dbc.Input(id="ecu_1st_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
-                                        dbc.FormFeedback("", type="invalid", id="ecu_1st_sem_fb"),
-                                    ], width=5,
-                                ),
-
-                                # Botón info
-                                create_info_btn('1st_sem_btn'),
-
-                            ], justify="between", style={'margin-bottom': '5px'}),
-
-                            # Fila 2
-                            dbc.Row([
-
-                                dbc.Alert(id="error-message-uc1", color="danger", is_open=False, style={"margin-top": "10px"}),
-
-                            ],style={'margin-bottom': '5px'}),
-
-                        ],
-                        title='Academic data at the end of 1st sem.'
-                    ),
-
-                    # Menú desplegable 5: Academic data at the end of 2nd sem
-                    dbc.AccordionItem(
-                        [
-                            # Fila 1
-                            dbc.Row([
-
-                                # Approved curricular units
-                                dbc.Col([
-                                        dbc.Label("Approved credits", html_for="acu_2nd_sem", size="sm"),
-                                        dbc.Input(id="acu_2nd_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
-                                        dbc.FormFeedback("", type="invalid", id="acu_2nd_sem_fb"),
-                                    ], width=5,
-                                ),
-                                
-                                # Enrolled curricular units
-                                dbc.Col([
-                                        dbc.Label("Enrolled credits", html_for="ecu_2nd_sem", size="sm"),
-                                        dbc.Input(id="ecu_2nd_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
-                                        dbc.FormFeedback("", type="invalid", id="ecu_2nd_sem_fb"),
-                                    ], width=5,
-                                ),
-
-                                # Botón info
-                                create_info_btn('2nd_sem_btn'),
-
-                            ], justify="between", style={'margin-bottom': '5px'}),
-
-                            # Fila 2
-                            dbc.Row([
-
-                                dbc.Alert(id="error-message-uc2", color="danger", is_open=False, style={"margin-top": "10px"}),
-
-                            ],style={'margin-bottom': '5px'}),
-
-                        ],  
-                        title='Academic data at the end of 2nd sem.'
-                    ),
-
-            ],
-            id="accordion",
-            always_open=False
-        )
-    ], className='col-md-5', style={'padding-left': '40px', 'padding-right': '40px', 'padding-top': '10px'}),  
-
-    # ------------------------------------------------------------------------------------------------------------------
-    #                                           PANEL DE LA DERECHA: PREDICCIÓN
-    # ------------------------------------------------------------------------------------------------------------------
-    html.Div([
-        html.H3("Probability of academic success"),
-        html.P("The probability of academic success, calculated based on the parameters selected in the form, is:"),
-        html.Div(
-            dcc.Graph(
-                id='gauge-graph',
-            ), style={'height': '180px', 'overflow': 'auto', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}
-        ),
-        html.Hr(),
-        html.H4("Support Services based on Academic Success Prediction"),
-        html.P("To provide additional support to the students, you can refer them to the following resources:"),
-        dcc.Tabs([
-
-        # Pestaña de apoyo a los estudiantes
-        dcc.Tab(label='Student Support', children=[
-            html.Div([
-                html.Ul([
-                    html.Li("Course Coordinator: Ensure smooth course operation and represent students' interests."),
-                    html.Li("Mentors: 2nd-year student volunteers assist 1st-year students, aiding integration and offering subject support."),
-                    html.Li("Student Ombudsperson: Mediates and facilitates resolution of administrative, pedagogical, or social conflicts/problems that students may face."),
-                    html.Li("Student Associations: Represent and support students through academic associations, ensuring student well-being and assistance."),
-                    html.Li("Support for Special Needs: Tailored support based on assessment, including attendance and evaluation adaptations."),
-                ])
-            ], style={"margin-top": "20px"})
-        ]),
-
-        # Pestaña de servicios de financiación
-        dcc.Tab(label='Financial Services', children=[
-            html.Div([
-                html.Ul([
-                    html.Li("Study Grants: Financial aid for needy students following specified regulations."),
-                    html.Li("Mobility Grants: Available for eligible students, offering 1700 euros annually, through the BeOn Platform."),
-                    html.Li("Discounted Amenities for Students: Affordable food and accommodation packages."),
-                    html.Li("IPP Friend Program: Indirect social support through meal vouchers, food baskets, and housing cost relief."),
-                    html.Li("Awards and Recognition: Scholarships and prizes for academic achievements."),
-                ])
-            ], style={"margin-top": "20px"})
-        ])
-    ])
-
-    ], className='col-md-7', style={'padding-left': '40px', 'padding-right': '40px', 'padding-top': '10px'})
-
-], className='row')  
 
 # ======================================================================================================================
 #                                                LÓGICA DE LA APLICACIÓN
