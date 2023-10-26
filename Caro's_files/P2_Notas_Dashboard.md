@@ -1,6 +1,14 @@
 ## Oct 25: 🛠️ Día de trabajo
-### Preguntas y posibles mejoras
-- Hacer un borrador de las visualizaciones que se quieren incluir en el dashboard.
+### 🏇🏽 Orden de próximas tareas
+- Crear un lienzo en blanco para las visualizaciones.
+    - Crear un archivo `visualizaciones.py` para contener las visualizaciones.
+    - Temporalmente, trabajarlo de forma independiente al dashboard.
+    - Colocarle contenido dummie para probarlo.
+    - Hacer wireframes final de las visualizaciones para determinar qué datos se incluirán en la base de datos.
+- Crear una base de datos con los datos necesarios para las visualizaciones.
+    - De acuerdo con el wireframe, limpiar la base de datos.
+- Incorporar los datos a las visualizaciones de forma local.
+- Subir los datos a base virtual e integrar.
 
 ### 💔 Intento de implementación de dcc.Store
 - Intenté utilizar todas las herramientas humanamente posibles para guardar la info del formulario. Fracasé estrepitosamente.
