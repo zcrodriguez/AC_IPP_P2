@@ -17,7 +17,8 @@ gantt
     🛠️ Creación de app multi-página:2023-10-24,1d
     💔 Intento de implementación de dcc.Store:2023-10-25 6:30, 6h
     🛠️ Creación de app multi-página v2:2023-10-25 21:00, 2h
-    ❤️‍🩹 Primera implementación exitosa de dcc.Store:2023-10-25 23:00, 1h
+    🤡 "Primera implementación exitosa de dcc.Store":2023-10-25 23:00, 1h
+    🤯 Implementación exitosa de persistencia de datos:2023-10-26 00:00, 3h
 ```
 
 ## Requisitos

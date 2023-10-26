@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 import json
 import pickle
 from pgmpy.inference import VariableElimination
+from dash.exceptions import PreventUpdate
 
 templates = ["spacelab"]
 load_figure_template(templates)
@@ -71,9 +72,9 @@ def create_dd(id, label, options, placeholder, width=12, optionHeight=35):
         dbc.Label(label, html_for=id, size="sm"),
         dcc.Dropdown(id=id, 
             options=options,
-            value=None,
             placeholder=placeholder,
             optionHeight=optionHeight,
+            persistence=True  # Habilitar la persistencia para mantener el estado
         ),
     ], width=width)
 
@@ -184,8 +185,6 @@ def validate_credit_inputs(aprobadas, inscritas):
 # ======================================================================================================================
 
 layout = html.Div([
-
-    dcc.Store(id='selected-city'),
 
     # Disclaimer text
     html.Div([
@@ -311,7 +310,7 @@ layout = html.Div([
                                 # Approved curricular units
                                 dbc.Col([
                                         dbc.Label("Approved credits", html_for="acu_1st_sem", size="sm"),
-                                        dbc.Input(id="acu_1st_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
+                                        dbc.Input(id="acu_1st_sem", type="number", min=0, max=26, step=1, value=0, size="sm", persistence=True),
                                         dbc.FormFeedback("", type="invalid", id="acu_1st_sem_fb"),
                                     ], width=5,
                                 ),
@@ -319,7 +318,7 @@ layout = html.Div([
                                 # Enrolled curricular units
                                 dbc.Col([
                                         dbc.Label("Enrolled credits", html_for="ecu_1st_sem", size="sm"),
-                                        dbc.Input(id="ecu_1st_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
+                                        dbc.Input(id="ecu_1st_sem", type="number", min=0, max=26, step=1, value=0, size="sm", persistence=True),
                                         dbc.FormFeedback("", type="invalid", id="ecu_1st_sem_fb"),
                                     ], width=5,
                                 ),
@@ -349,7 +348,7 @@ layout = html.Div([
                                 # Approved curricular units
                                 dbc.Col([
                                         dbc.Label("Approved credits", html_for="acu_2nd_sem", size="sm"),
-                                        dbc.Input(id="acu_2nd_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
+                                        dbc.Input(id="acu_2nd_sem", type="number", min=0, max=26, step=1, value=0, size="sm", persistence=True),
                                         dbc.FormFeedback("", type="invalid", id="acu_2nd_sem_fb"),
                                     ], width=5,
                                 ),
@@ -357,7 +356,7 @@ layout = html.Div([
                                 # Enrolled curricular units
                                 dbc.Col([
                                         dbc.Label("Enrolled credits", html_for="ecu_2nd_sem", size="sm"),
-                                        dbc.Input(id="ecu_2nd_sem", type="number", min=0, max=26, step=1, value=0, size="sm"),
+                                        dbc.Input(id="ecu_2nd_sem", type="number", min=0, max=26, step=1, value=0, size="sm", persistence=True),
                                         dbc.FormFeedback("", type="invalid", id="ecu_2nd_sem_fb"),
                                     ], width=5,
                                 ),
@@ -570,19 +569,26 @@ def update_input_validity_all(value_1er_sem_aprobadas, value_1er_sem_inscritas,
     [Output(f'dd_{param}', 'value') for param in dd_params.keys()] +
     [Output('acu_1st_sem', 'value'), Output('ecu_1st_sem', 'value'),
      Output('acu_2nd_sem', 'value'), Output('ecu_2nd_sem', 'value')],
-    [Input('clear-button', 'n_clicks')]
+    [Input('clear-button', 'n_clicks')],
+    prevent_initial_call=True
 )
 def clear_form(n_clicks):
-
-    n_dropdowns = len(dd_params)  # Número de dropdowns
-
-    if n_clicks is None:
-        n_clicks = 1 # Para que se pueda ver el Gauge Graph al inicio
-    if not n_clicks:
-        return [dash.no_update] * n_dropdowns
-
-    # Si ha sido clickeado, reseteamos todos los dropdowns a su valor inicial (None)
-    return [None] * n_dropdowns + [0, 0, 0, 0]  # Añadimos los valores para las últimas 4 salidas
+    if n_clicks is not None and n_clicks > 0:
+        # Clear the dropdowns
+        dd_values = {f'dd_{param}': None for param in dd_params.keys()}
+        
+        # Clear the numeric fields
+        numeric_values = {
+            'acu_1st_sem': 0, 'ecu_1st_sem': 0,
+            'acu_2nd_sem': 0, 'ecu_2nd_sem': 0
+        }
+        
+        # Combine the dictionaries for the output values
+        output_values = {**dd_values, **numeric_values}
+        
+        return [output_values[param] for param in output_values]
+    else:
+        raise PreventUpdate
 
 # ----------------------------------------------------------------------------------------------------------------------
 #                                                       PROGRESO
@@ -611,4 +617,3 @@ def update_progress_bar(*values):
     # Calcula el progreso con dos decimales
     progress = round(filled_params / total_params * 100)
     return progress, f"{progress} %" if progress >= 5 else ""
-
