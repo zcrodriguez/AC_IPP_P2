@@ -16,6 +16,7 @@ gantt
     🔍 Construcción de wireframe:2023-10-23,1d
     🛠️ Creación de app multi-página:2023-10-24,1d
     💔 Intento de implementación de dcc.Store:2023-10-25 6:30, 6h
+    🛠️ Creación de app multi-página v2:2023-10-25 21:00, 2h
 ```
 
 ## Requisitos
@@ -36,7 +37,11 @@ gantt
     - `assets/logo-deca.png`: Logo creado para el proyecto.
     - `assets/modelo_entrenado.pkl`: Modelo serializado entrenado con los datos de limpios.
     - `assets/parameter_options.JSON`: Archivo JSON con las opciones de los menús desplegables.
-- `Caro's_files`: Carpeta que contiene archivos de experimentación y apuntes sobre investigación y avance del proyecto.
+- `Caro's_files/`: Carpeta que contiene archivos de experimentación y apuntes sobre investigación y avance del proyecto.
+    - `P2_Notas_Dashboard.md`: Archivo que contiene notas sobre el avance del proyecto.
+- `Pages/`: Carpeta que contiene los archivos de las páginas del dashboard.
+    - `home.py`: Archivo que contiene el contenido de la página de inicio (app v.1.).
+    - `visualizations.py`: Archivo que contiene el contenido de la página de visualizaciones.	
 - `.gitignore`: Archivo que especifica los archivos que no se deben subir al repositorio.
 - `app.py`: Código principal de la aplicación.
 
