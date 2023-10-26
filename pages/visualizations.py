@@ -1,5 +1,5 @@
 import dash
-from dash import html, dcc, Input, Output, State, MATCH, ALL
+from dash import html, dcc, Input, Output
 from dash.exceptions import PreventUpdate
 
 dash.register_page(__name__)

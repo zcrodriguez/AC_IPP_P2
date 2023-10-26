@@ -1,7 +1,7 @@
 # Modelo de Predicción de Éxito Académico
 Esta aplicación es un prototipo que utiliza un modelo de aprendizaje automático para predecir la probabilidad de éxito académico de un estudiante en función de ciertos parámetros socioeconómicos y académicos.
 
-## Avance del proyecto
+## Avance de Fase 2 del proyecto
 ```mermaid
 gantt
     title Proyecto 2 - Predicción de éxito académico
@@ -19,6 +19,8 @@ gantt
     🛠️ Creación de app multi-página v2 (Clean):2023-10-25 21:00, 2h
     🤡 "Primera implementación exitosa de dcc.Store":2023-10-25 23:00, 1h
     🤯 Implementación exitosa de persistencia de datos:2023-10-26 00:00, 3h
+    🔀 Merge y documentación de rama multipage-app-v2 y merge:2023-10-26 8:30, 1h
+    📝 Mejoras en documentación y limpieza de código:2023-10-26 9:30, 40m
 ```
 
 ## Requisitos
