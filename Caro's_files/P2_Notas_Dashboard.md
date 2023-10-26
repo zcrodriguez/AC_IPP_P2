@@ -10,6 +10,12 @@
 - Incorporar los datos a las visualizaciones de forma local.
 - Subir los datos a base virtual e integrar.
 
+### 🛠️ Implementación de Multi-Page Apps with Pages
+- Modifiqué el archivo `app.py` para contener la app multi-página.
+- Creé archivo `test_app.py` para probar la app multi-página antes de implementarla en la app final.
+    - Creé los archivos `home.py` y `visualizations.py`, almacenados en la carpega `pages/` para contener el contenido de cada página.
+    - Añadí `__pycache__` a `.gitignore` para evitar que se suba a GitHub.
+
 ### 💔 Intento de implementación de dcc.Store
 - Intenté utilizar todas las herramientas humanamente posibles para guardar la info del formulario. Fracasé estrepitosamente.
 - Usé persistence, dcc.Store, callbacks, y hasta intenté guardar la info en un archivo JSON sin éxito.

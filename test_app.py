@@ -1,8 +1,11 @@
 import dash
-from dash import html
+from dash import html, dcc, Input, Output
 import dash_bootstrap_components as dbc
+from dash_bootstrap_templates import load_figure_template
+import plotly.graph_objects as go
+from pgmpy.inference import VariableElimination
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.MINTY], use_pages=True)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB], use_pages=True)
 server = app.server
 
 app.layout = html.Div([
