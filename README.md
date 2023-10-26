@@ -14,9 +14,9 @@ gantt
     section 🐴 Caro - Dashboard + Visualizaciones
     🔍 Entendimiento de la tarea:2023-10-20 8:00,4h
     🔍 Construcción de wireframe:2023-10-23,1d
-    🛠️ Creación de app multi-página:2023-10-24,1d
+    🛠️ Creación de app multi-página v1 (Rústica):2023-10-24,1d
     💔 Intento de implementación de dcc.Store:2023-10-25 6:30, 6h
-    🛠️ Creación de app multi-página v2:2023-10-25 21:00, 2h
+    🛠️ Creación de app multi-página v2 (Clean):2023-10-25 21:00, 2h
     🤡 "Primera implementación exitosa de dcc.Store":2023-10-25 23:00, 1h
     🤯 Implementación exitosa de persistencia de datos:2023-10-26 00:00, 3h
 ```
