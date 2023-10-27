@@ -2,7 +2,7 @@ import dash
 from dash import html
 import dash_bootstrap_components as dbc
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.MINTY], use_pages=True)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.MINTY, '/assets/custom.css'], use_pages=True)
 server = app.server
 
 # ======================================================================================================================
@@ -25,10 +25,10 @@ app.layout = html.Div([
             # Links de la barra de navegación
             dbc.Nav(
                 [
-                    dbc.NavItem(dbc.NavLink("🏠 Home", href="/")),
-                    dbc.NavItem(dbc.NavLink("🚧 Page 1", href="/visualizations")),
+                    dbc.NavItem(dbc.NavLink("🏠 Home", href="/", active="exact")),
+                    dbc.NavItem(dbc.NavLink("🚧 Page 1", href="/visualizations", active="exact",)),
                 ],
-                className="ml-auto",
+                pills=True, 
             ),
         ]),
         color="dark", dark=True,
