@@ -13,14 +13,11 @@ gantt
     🛠️ Implementación de aprendizaje de estructura: 2023-10-25 12:00, 5d
     section 🐴 Caro - Dashboard + Visualizaciones
     🔍 Entendimiento de la tarea:2023-10-20 8:00,4h
-    🔍 Construcción de wireframe:2023-10-23,1d
+    📝 Lluvia de ideas y propósitos posibles para visualizaciones:2023-10-23,1d
     🛠️ Creación de app multi-página v1 (Rústica):2023-10-24,1d
-    💔 Intento de implementación de dcc.Store:2023-10-25 6:30, 6h
-    🛠️ Creación de app multi-página v2 (Clean):2023-10-25 21:00, 2h
-    🤡 "Primera implementación exitosa de dcc.Store":2023-10-25 23:00, 1h
-    🤯 Implementación exitosa de persistencia de datos:2023-10-26 00:00, 3h
-    🔀 Merge y documentación de rama multipage-app-v2 y merge:2023-10-26 8:30, 1h
-    📝 Mejoras en documentación y limpieza de código:2023-10-26 9:30, 40m
+    🛠️ Creación de app multi-página v2 (Clean):2023-10-25 6:30, 28h
+    📝 Construcción de wireframe:2023-10-28 8:30, 48.5h
+    🛠️ Creación de BD para visualizaciones:2023-10-30 9:10, 7h
 ```
 
 ## Requisitos
@@ -43,6 +40,8 @@ gantt
     - `parameter_options.JSON`: Archivo JSON con las opciones de los menús desplegables.
 - `Caro's_files/`: Carpeta que contiene archivos de experimentación y apuntes sobre investigación y avance del proyecto.
     - `P2_Notas_Dashboard.md`: Archivo que contiene notas sobre el avance del proyecto.
+    - `data_raw.csv`: Archivo que contiene los datos originales.
+    - `data_viz.csv`: Archivo que contiene los datos limpios para las visualizaciones.
 - `Pages/`: Carpeta que contiene los archivos de las páginas del dashboard.
     - `home.py`: Archivo que contiene el cuerpo de la página de inicio (app v.1.).
     - `visualizations.py`: Archivo que contiene el cuerpo de la página de visualizaciones.	
