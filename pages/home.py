@@ -8,7 +8,7 @@ import pickle
 from pgmpy.inference import VariableElimination
 from dash.exceptions import PreventUpdate
 
-templates = ["spacelab"]
+templates = ["minty"]
 load_figure_template(templates)
 
 # Registrar la página
@@ -396,9 +396,14 @@ layout = html.Div([
         html.H3("Probability of academic success"),
         html.P("The probability of academic success, calculated based on the parameters selected in the form, is:"),
         html.Div(
-            dcc.Graph(
-                id='gauge-graph',
-            ), style={'height': '180px', 'overflow': 'auto', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}
+            dbc.Spinner(
+                dcc.Graph(
+                    id='gauge-graph',
+                ),
+                size="lg",  # Ajusta el tamaño del spinner según tus preferencias
+                color="primary",  # Cambia el color del spinner si es necesario
+            ),
+            style={'height': '180px', 'overflow': 'auto', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}
         ),
         html.Hr(),
         html.H4("Support Services based on Academic Success Prediction"),
