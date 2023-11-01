@@ -4,3 +4,6 @@
 /Caro's_files/*.svg
 /Caro's_files/Model_Training_and_Export.py
 __pycache__/
+
+# Ignorar recursos encontrados para crear archivo *.SQL para visualizaciones
+/Crear un SQL
