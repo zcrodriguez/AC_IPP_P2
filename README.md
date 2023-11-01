@@ -18,7 +18,8 @@ gantt
     🛠️ Creación de app multi-página v2 (Clean):2023-10-25 6:30, 28h
     📝 Construcción de wireframe:2023-10-28 8:30, 48.5h
     🛠️ Creación de BD para visualizaciones:2023-10-30 9:10, 7h
-    👩🏽‍🎨 Borrador 1 de visualizaciones:2023-10-30 16:00, 4h
+    👩🏽‍🎨 Borrador 1 de visualizaciones:2023-10-30 16:10, 7h
+    🩸 Gráfico 1 - Dropout rate by Course:2023-11-1 8:20, 10h
 ```
 
 ## Requisitos
