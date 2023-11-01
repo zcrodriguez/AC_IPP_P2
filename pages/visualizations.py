@@ -7,9 +7,8 @@ import plotly.express as px
 import json
 import pickle
 import pandas as pd
-from dash.exceptions import PreventUpdate
 
-templates = ["sketchy"]
+templates = ["minty"]
 load_figure_template(templates)
 
 # Registrar la página
@@ -30,12 +29,39 @@ card_icon = {
 # Carga el archivo CSV en un DataFrame
 df = pd.read_csv('Caro\'s_files/data_viz.csv', dtype={'Course': 'category'})  # Asegúrate de que la ruta sea correcta
 
+# ======================================================================================================================
+#                                               DICCIONARIOS AUXILIARES
+# ======================================================================================================================
+course_name = {
+    "33": "Biofuel Production Technologies",
+    "171": "Animation and Multimedia Design",
+    "8014": "Social Service (evening attendance)",
+    "9003": "Agronomy",
+    "9070": "Communication Design",
+    "9085": "Veterinary Nursing",
+    "9119": "Informatics Engineering",
+    "9130": "Equinculture",
+    "9147": "Management",
+    "9238": "Social Service",
+    "9254": "Tourism",
+    "9500": "Nursing",
+    "9556": "Oral Hygiene",
+    "9670": "Advertising and Marketing Management",
+    "9773": "Journalism and Communication",
+    "9853": "Basic Education",
+    "9991": "Management (evening attendance)",
+}
+
+# ======================================================================================================================
+#                                                     TARJETAS
+# ======================================================================================================================
+
 # Valores para tarjetas
 # TODO ajustar código para calcularlos a partir de base en RDS en AWS
 df_graph_a = len(df)
 df_graph_b = f"{round(len(df[df['Target'] == 'Graduate']) / df_graph_a * 100, 2)}%"
 df_graph_c = round(len(df[df['Target'] == 'Dropout']) / df_graph_a * 100, 2)
-delta_graph_c = f"{round(df_graph_c - 8.1, 2)}%"
+delta_graph_c = f"{round(df_graph_c - 29.0, 2)}%"
 df_graph_c = f"{df_graph_c}%"
 
 # Lista de datos para las tarjetas
@@ -79,8 +105,10 @@ for card_data in cards_data:
     ], className="mt-4 shadow"))
     cards.append(card)
 
+
+
 # ======================================================================================================================
-#                                                      GRÁFICOS
+#                                       GRÁFICO PARA TAB 1: DROPOUT RATE BY COURSE
 # ======================================================================================================================
 
 # Calcula el porcentaje de graduate, enrolled y dropout por carrera
@@ -95,27 +123,89 @@ percentage_df = pd.DataFrame({'Course': total_counts.index,
                               'Enrolled': enrolled_percentage,
                               'Dropout': dropout_percentage})
 
+# Reemplaza los códigos de las carreras con sus nombres
+percentage_df['Course'] = percentage_df['Course'].map(course_name)
+
 # Ordena el DataFrame por el porcentaje de dropout de mayor a menor
-percentage_df = percentage_df.sort_values(by='Dropout', ascending=True)
+percentage_df = percentage_df.sort_values(by='Dropout', ascending=False)
 
-# Seleccionar solo top 5
-percentage_df = percentage_df.tail(5)
+# Crea un gráfico de barras apiladas con las 10 carreras con mayor porcentaje de dropout
+fig = px.bar(percentage_df.head(10), x='Dropout', y='Course',
+             labels={'variable': 'Course', 'value': 'Dropout rate'},
+             barmode="relative",
+             text='Dropout')
 
-# Crea un gráfico de barras apiladas
-fig = px.bar(percentage_df, x=['Dropout', 'Enrolled', 'Graduate'], y='Course',
-             labels={'variable': 'Categoría', 'value': 'Porcentaje'},
-             color_discrete_map={'Graduate': 'green', 'Enrolled': 'blue', 'Dropout': 'red'},
-             barmode="relative")
+# Cursos que se pintarán de rojo oscuro
+red_courses = ['Biofuel Production Technologies', 'Informatics Engineering', 'Management (evening attendance)']
 
-# Restablece el índice para que las carreras se muestren en el orden correcto
-fig.update_xaxes(categoryorder='total ascending')
+# Personaliza los colores de las barras
+colors = ['#E87479' if course in red_courses else '#F7BBBD' if course in percentage_df['Course'].head(5).values else 'lightgrey' for course in percentage_df['Course']]
+fig.update_traces(marker=dict(color=colors))
 
 # Agregar porcentajes en el hover
-fig.update_traces(texttemplate='%{value:.2f}%', textposition='inside')
+fig.update_traces(texttemplate='%{value:.1f}%', textposition='inside')
 
 # Personaliza el diseño y estilo
-fig.update_layout(xaxis_title='Carrera', yaxis_title='Porcentaje (%)')
+fig.update_xaxes(showticklabels=False)
+fig.update_yaxes(categoryorder='total ascending')
+fig.update_layout(xaxis_title='', yaxis_title='Courses', margin=dict(t=10,b=5), height=350)
 
+
+
+# ======================================================================================================================
+#                                                       TABS
+# ======================================================================================================================
+
+# TAB 1: DROPOUT RATE BY COURSE
+tab1_content = dbc.Card(
+
+    dbc.CardBody([
+        dbc.Row([
+            
+            # Gráfico E: Dropout rate by Course
+            dbc.Col([
+                dbc.Card([
+
+                    # Título del gráfico
+                    dbc.CardHeader([
+                        html.H4([html.I(className="fa fa-user-minus"), '\tTop 10 Courses with Highest Dropout Rate']),
+                    ]),
+                    
+                    dcc.Graph(figure=fig),
+
+                ], className="mt-4 shadow"),
+            ], width=8),
+
+            # Comentarios a la derecha
+            dbc.Col([
+                html.Br(),
+                html.H2('🚧 Comentarios muchos comentarios'),
+                html.P('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
+
+            ], width=4),
+            
+        ], style={'padding-left': '20px', 'padding-right': '20px', 'padding-bottom': '20px'}),
+    ])
+)
+
+
+tab2_content = dbc.Card(
+
+    dbc.CardBody([
+        html.P("This is tab 2!"),
+    ])
+)
+
+# Crea el objeto layout
+tabs = dbc.Tabs(
+    [
+        dbc.Tab(tab1_content, label="Dropout rate by Course"),
+        dbc.Tab(tab2_content, label="Tab 2"),
+        dbc.Tab(
+            "This tab's content is never seen", label="Tab 3", disabled=True
+        ),
+    ], style={'padding-left': '20px', 'padding-right': '20px', 'padding-bottom': '0px', 'padding-top': '30px'}
+)
 
 
 # ======================================================================================================================
@@ -129,32 +219,10 @@ layout = html.Div([
         html.H3('🚧 Visualizaciones (En construcción)'),
     ], style={'padding-left': '20px', 'padding-right': '20px', 'padding-top': '10px'}),
     
-    # Primera fila con tarjetas generadas por el bucle
+    # Primera fila: Tarjetas generadas por el bucle
     dbc.Row(cards, style={'padding-left': '20px', 'padding-right': '20px'}),
 
-    # Segunda fila vacía
-    dbc.Row([
-
-        # Gráfico D: 
-        dbc.Col([
-            dbc.Card([
-                html.H4('En proceso', style={'padding-left': '20px', 'padding-right': '20px', 'padding-top': '20px'}),
-
-                # Insertar esta imagen https://cdn.sisense.com/wp-content/uploads/meme5-370x236.jpg centrada, con el siguiente código:
-                html.Img(src="https://cdn.sisense.com/wp-content/uploads/meme5-370x236.jpg", style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto', 'width': '80%'}),
-
-            ], className="mt-4 shadow"),
-        ], width=6),
-
-
-        # Gráfico E: Stacked Bar Chart by Course
-        dbc.Col([
-            dbc.Card([
-                    html.H4('Stacked Bar Chart by Course', style={'padding-left': '20px', 'padding-right': '20px', 'padding-top': '20px'}),
-                    dcc.Graph(figure=fig)
-                ], className="mt-4 shadow"),
-            ], width=6),
-        ], style={'padding-left': '20px', 'padding-right': '20px', 'padding-bottom': '20px'}),
+    # Segunda fila: Gráficos
+    tabs,
 
 ])
-
