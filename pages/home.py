@@ -190,12 +190,6 @@ def validate_credit_inputs(aprobadas, inscritas):
 
 layout = html.Div([
 
-    # Disclaimer text
-    html.Div([
-        dbc.Alert(disclaimer, color="warning", dismissable=True),
-    ], className='row', style={'padding-left': '40px', 'padding-right': '40px', "padding-top": "10px"}),
-
-
     # ------------------------------------------------------------------------------------------------------------------
     #                                           PANEL DE LA IZQUIERDA: FORMULARIO
     # ------------------------------------------------------------------------------------------------------------------
