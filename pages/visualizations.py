@@ -1,11 +1,9 @@
 import dash
-from dash import html, dcc, Input, Output
+from dash import html, dcc
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 import plotly.graph_objects as go
 import plotly.express as px
-import json
-import pickle
 import pandas as pd
 
 templates = ["minty"]
@@ -93,7 +91,7 @@ for card_data in cards_data:
         dbc.Card(html.Div(className=card_data["icon_class"], style=card_icon), className=card_data["bg_color"], style={"maxWidth": 75}),
         dbc.Card([
             dbc.CardBody([
-                html.H3(card_data["value"], className="card-text",),
+                html.H4(card_data["value"], className="card-text",),
             ]),
             dbc.CardFooter([
                 html.H6(card_data["footer_text"], style={"display": "inline"}),
@@ -116,9 +114,12 @@ total_counts = df.groupby('Course')['Target'].count()
 graduate_percentage = df[df['Target'] == 'Graduate'].groupby('Course')['Target'].count() / total_counts * 100
 enrolled_percentage = df[df['Target'] == 'Enrolled'].groupby('Course')['Target'].count() / total_counts * 100
 dropout_percentage = df[df['Target'] == 'Dropout'].groupby('Course')['Target'].count() / total_counts * 100
+# Estudiantes totales por carrera
+
 
 # Crea un nuevo DataFrame con los porcentajes
 percentage_df = pd.DataFrame({'Course': total_counts.index,
+                              'Students': total_counts.values,
                               'Graduate': graduate_percentage,
                               'Enrolled': enrolled_percentage,
                               'Dropout': dropout_percentage})
@@ -130,17 +131,25 @@ percentage_df['Course'] = percentage_df['Course'].map(course_name)
 percentage_df = percentage_df.sort_values(by='Dropout', ascending=False)
 
 # Crea un gráfico de barras apiladas con las 10 carreras con mayor porcentaje de dropout
-fig = px.bar(percentage_df.head(10), x='Dropout', y='Course',
+n_registros = 10
+fig = px.bar(percentage_df.head(n_registros), x='Dropout', y='Course',
              labels={'variable': 'Course', 'value': 'Dropout rate'},
              barmode="relative",
-             text='Dropout')
+             hover_data={'Course': False, 
+                         'Dropout': False,
+                         'Dropout rate': [str(round(percentage, 1))+'%' for percentage in percentage_df['Dropout'].head(n_registros).values],
+                         'Students': True,},
+             )
 
 # Cursos que se pintarán de rojo oscuro
 red_courses = ['Biofuel Production Technologies', 'Informatics Engineering', 'Management (evening attendance)']
 
 # Personaliza los colores de las barras
-colors = ['#E87479' if course in red_courses else '#F7BBBD' if course in percentage_df['Course'].head(5).values else 'lightgrey' for course in percentage_df['Course']]
-fig.update_traces(marker=dict(color=colors))
+colors = ['#E87479' if course in red_courses 
+          else '#F7BBBD' if course in percentage_df['Course'].head(5).values 
+          else 'lightgrey' for course in percentage_df['Course']]
+
+fig.update_traces(marker=dict(color=colors)),
 
 # Agregar porcentajes en el hover
 fig.update_traces(texttemplate='%{value:.1f}%', textposition='inside')
@@ -148,8 +157,11 @@ fig.update_traces(texttemplate='%{value:.1f}%', textposition='inside')
 # Personaliza el diseño y estilo
 fig.update_xaxes(showticklabels=False)
 fig.update_yaxes(categoryorder='total ascending')
-fig.update_layout(xaxis_title='', yaxis_title='Courses', margin=dict(t=10,b=5), height=350)
 
+# Añadir línea vertical en el 29% con opacidad al 70% (Requiere modificar margin a t=50)
+# fig.add_vline(x=29, line_width=2, line_dash="dash", line_color="#549f93", opacity=0.7, annotation_text="Portugal (29%)", annotation_position="top")
+
+fig.update_layout(xaxis_title='', yaxis_title='Courses', margin=dict(t=10,b=5), height=350)
 
 
 # ======================================================================================================================
@@ -179,9 +191,16 @@ tab1_content = dbc.Card(
             # Comentarios a la derecha
             dbc.Col([
                 html.Br(),
-                html.H2('🚧 Comentarios muchos comentarios'),
-                html.P('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
+                html.H2('🚧 Insights'),
 
+                # Viñetas (html.Li) dentro de una lista (html.Ul)
+                html.Ul([
+                    html.Li('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
+                    html.Li('Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+                    html.Li('Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'),
+                    html.Li('Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
+                ]),
+                
             ], width=4),
             
         ], style={'padding-left': '20px', 'padding-right': '20px', 'padding-bottom': '20px'}),
