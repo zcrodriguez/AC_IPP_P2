@@ -20,6 +20,7 @@ gantt
     🛠️ Creación de BD para visualizaciones:2023-10-30 9:10, 7h
     👩🏽‍🎨 Borrador 1 de visualizaciones:2023-10-30 16:10, 7h
     🩸 Gráfico 1 - Dropout rate by Course:2023-11-1 8:20, 10h
+    🛠️ Optimización de Gráfico 1 + Insights:2023-11-2 6:50, 13h
 ```
 
 ## Requisitos
