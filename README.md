@@ -21,6 +21,7 @@ gantt
     👩🏽‍🎨 Borrador 1 de visualizaciones:2023-10-30 16:10, 7h
     🩸 Gráfico 1 - Dropout rate by Course:2023-11-1 8:20, 10h
     🛠️ Optimización de Gráfico 1 + Insights:2023-11-2 6:50, 13h
+    🩸 Gráfico 2 - Socieconomic variables vs Academic performance:2023-11-3 20:00, 26h
 ```
 
 ## Requisitos
