@@ -18,18 +18,46 @@ load_figure_template(templates)
 # Registrar la página
 dash.register_page(__name__)
 
-# Estilo del icono de las tarjetas
-card_icon = {
-    "color": "white",
-    "textAlign": "center",
-    "fontSize": 30,
-    "margin": "auto",
-}
+# ======================================================================================================================
+#                                          CARGA DE DATOS DESDE RDS EN AWS
+# ======================================================================================================================
+
+import psycopg2
+
+engine = psycopg2.connect(
+    dbname="data_viz",
+    user="postgres",
+    password="pumablue97",
+    host="p2-triassic-db.caiyr0br3ulx.us-east-1.rds.amazonaws.com",
+    port='5432'
+)
+
+
+# Crea un cursor para ejecutar consultas
+cursor = engine.cursor()
+
+# Crea y ejecuta la consulta
+query = "SELECT * FROM dataviz;"
+cursor.execute(query)
+
+# Obtiene los resultados
+results = cursor.fetchall()
+
+# Convertir los resultados en un dataframe
+df = pd.DataFrame(results, columns=['Target', 'Debtor', 'Scholarship holder', 'Course'])
+
+# Cierra el cursor y la conexión
+cursor.close()
+engine.close()
+
+# Convierte 'Course' en una variable categórica
+df['Course'] = df['Course'].astype(str)
+df['Course'] = df['Course'].astype('category')
+
 
 # Carga el archivo CSV en un DataFrame
-df = pd.read_csv('Caro\'s_files/data_viz.csv', dtype={'Course': 'category'})  # Asegúrate de que la ruta sea correcta
-
-
+# df_alt = pd.read_csv('Caro\'s_files/data_viz.csv', dtype={'Course': 'category'})  # Asegúrate de que la ruta sea correcta
+# df_alt.head()
 
 # ======================================================================================================================
 #                                               DICCIONARIOS AUXILIARES
@@ -52,6 +80,14 @@ school_name = all_params.get('visualizations_dict', {}).get('school_name', {})
 # ======================================================================================================================
 #                                                     TARJETAS
 # ======================================================================================================================
+
+# Estilo del icono de las tarjetas
+card_icon = {
+    "color": "white",
+    "textAlign": "center",
+    "fontSize": 30,
+    "margin": "auto",
+}
 
 # Valores para tarjetas
 # TODO ajustar código para calcularlos a partir de base en RDS en AWS
@@ -119,12 +155,13 @@ df_g1 = pd.DataFrame({'Course': total_counts.index,
                               'Enrolled': enrolled_percentage,
                               'Dropout': dropout_percentage})
 
+df_g1.head()
+
 # Reemplaza los códigos de las carreras con sus nombres
 df_g1['Course'] = df_g1['Course'].map(course_name)
 
 # Añade una columna con el nombre de la escuela a partir del indice de la carrera
 df_g1['School'] = df_g1.index.map(school_name)
-
 
 # Ordena el DataFrame por el porcentaje de dropout de mayor a menor
 df_g1 = df_g1.sort_values(by='Dropout', ascending=False)

@@ -4,3 +4,4 @@ __pycache__/
 
 # Ignorar recursos encontrados para crear archivo *.SQL para visualizaciones
 /Crear un SQL
+*.pem
