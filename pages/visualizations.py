@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from pywaffle import Waffle # Usé py -m pip install pywaffle para instalarlo
 import base64
 from io import BytesIO
+import json
 
 templates = ["minty"]
 load_figure_template(templates)
@@ -33,45 +34,19 @@ df = pd.read_csv('Caro\'s_files/data_viz.csv', dtype={'Course': 'category'})  # 
 # ======================================================================================================================
 #                                               DICCIONARIOS AUXILIARES
 # ======================================================================================================================
-course_name = {
-    "33": "Biofuel Production Technologies",
-    "171": "Animation and Multimedia Design",
-    "8014": "Social Service (evening attendance)",
-    "9003": "Agronomy",
-    "9070": "Communication Design",
-    "9085": "Veterinary Nursing",
-    "9119": "Informatics Engineering",
-    "9130": "Equinculture",
-    "9147": "Management",
-    "9238": "Social Service",
-    "9254": "Tourism",
-    "9500": "Nursing",
-    "9556": "Oral Hygiene",
-    "9670": "Advertising and Marketing Management",
-    "9773": "Journalism and Communication",
-    "9853": "Basic Education",
-    "9991": "Management (evening attendance)",
-}
+# Cargar el archivo JSON
+try:
+    with open('assets/parameter_options.JSON', 'r', encoding='utf-8') as json_file:
+        all_params = json.load(json_file)
+except FileNotFoundError:
+    print("El archivo JSON no se encontró.")
+except json.JSONDecodeError:
+    print("Error al decodificar el archivo JSON.")
+    all_params = {}
 
-school_name = {
-    "33": "ESTG",
-    "171": "ESTG",
-    "8014": "ESECS",
-    "9003": "ESAE",
-    "9070": "ESTG",
-    "9085": "ESAE",
-    "9119": "ESTG",
-    "9130": "ESAE",
-    "9147": "ESTG",
-    "9238": "ESECS",
-    "9254": "ESECS",
-    "9500": "ESS",
-    "9556": "ESS",
-    "9670": "ESECS",
-    "9773": "ESECS",
-    "9853": "ESECS",
-    "9991": "ESTG",
-}
+# Extraer los diccionarios de cursos y escuelas
+course_name = all_params.get('visualizations_dict', {}).get('course_name', {})
+school_name = all_params.get('visualizations_dict', {}).get('school_name', {})
 
 
 # ======================================================================================================================
