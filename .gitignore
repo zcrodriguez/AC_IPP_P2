@@ -1,8 +1,5 @@
 # Ignorar archivos de experimentación de caro
-/Caro's_files/*.xlsx
-/Caro's_files/*.pptx
-/Caro's_files/*.svg
-/Caro's_files/Model_Training_and_Export.py
+/Caro's_files/
 __pycache__/
 
 # Ignorar recursos encontrados para crear archivo *.SQL para visualizaciones
