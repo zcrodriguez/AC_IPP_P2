@@ -22,30 +22,31 @@ gantt
     🩸 Gráfico 1 - Dropout rate by Course:2023-11-1 8:20, 10h
     🛠️ Optimización de Gráfico 1 + Insights:2023-11-2 6:50, 13h
     🩸 Gráfico 2 - Socieconomic variables vs Academic performance:2023-11-3 20:00, 26h
+    🛠️ Serialización de código y actualización de JSON: 2023-11-5 14:00, 12h
+    👑 Despliegue de la app en la nube: 2023-11-6 8:56, 9h
 ```
 
 ## Requisitos
 - Python 3.6 o superior
 - Instalar las dependencias:
-    - `Dash`
-    - `Dash Bootstrap Components`
-    - `Dash Bootstrap Templates`
-    - `Pgmpy`
-
-## Uso
-1. Completa los parámetros en el formulario de la izquierda.
-2. Observa la probabilidad de éxito académico en el gráfico de la derecha.
-3. Ajusta los parámetros y observa cómo cambia la probabilidad de éxito académico.
+    - `dash`
+    - `dash_bootstrap_components`
+    - `dash_bootstrap_templates`
+    - `fontawesome`
+    - `gunicorn`
+    - `matplotlib`
+    - `pandas`
+    - `pgmpy`
+    - `psycopg2`
+    - `pywaffle`
 
 ## Estructura del Proyecto
+- `app_folder`: Carpeta "despliegue", correspondiente al Soporte 4 requerido en la Fase 2 del proyecto. 
 - `assets/`: Directorio que contiene los recursos utilizados en la interfaz.
+    - `custom.css`: Archivo que contiene el estilo personalizado de la aplicación.
     - `logo-deca.png`: Logo creado para el proyecto.
     - `modelo_entrenado.pkl`: Modelo serializado entrenado con los datos de limpios.
     - `parameter_options.JSON`: Archivo JSON con las opciones de los menús desplegables.
-- `Caro's_files/`: Carpeta que contiene archivos de experimentación y apuntes sobre investigación y avance del proyecto.
-    - `P2_Notas_Dashboard.md`: Archivo que contiene notas sobre el avance del proyecto.
-    - `data_raw.csv`: Archivo que contiene los datos originales.
-    - `data_viz.csv`: Archivo que contiene los datos limpios para las visualizaciones.
 - `Pages/`: Carpeta que contiene los archivos de las páginas del dashboard.
     - `home.py`: Archivo que contiene el cuerpo de la página de inicio (app v.1.).
     - `visualizations.py`: Archivo que contiene el cuerpo de la página de visualizaciones.	
